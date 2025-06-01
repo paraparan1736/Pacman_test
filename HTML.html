@@ -1,0 +1,89 @@
+<!DOCTYPE html> 
+<html lang="ko"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>팩맨</title> 
+  <style> 
+    body { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      height: 100vh; 
+      margin: 0; 
+      background-color: black; 
+      color: white; 
+      font-family: sans-serif; 
+      text-align: center; 
+    } 
+    #pacman-game { 
+      position: relative; 
+      width: 1000px; 
+      height: 800px; 
+      border: 1px solid white; 
+      margin: 20px auto; 
+      background-image: url(https://www.mapshop.com/wpcontent/uploads/2017/10/pc_mspac1.jpg); 
+      background-size: 1000px 100%; 
+    } 
+    #score { 
+      position: fixed; 
+      top: 10px; 
+      left: 10px; 
+      color: yellow; 
+      font-size: 16px; 
+    } 
+    footer { 
+      font-size: 12px; 
+      margin-top: auto; 
+      padding: 10px; 
+      color: gray; 
+    } 
+    #help { 
+      display: none; 
+      margin-top: 10px; 
+      background: rgba(255, 255, 255, 0.1); 
+      padding: 10px; 
+      border: 1px solid white; 
+    }
+    li {
+      list-style: none;
+    } 
+  </style> 
+</head> 
+<body> 
+  <h1>팩맨</h1> 
+  <p>방향키(← ↑ ↓ →)로 팩맨을 움직이세요. 점수를 최대한 많이 획득해보세요!</p> 
+  <label for="player-name">플레이어 이름: </label> 
+  <input type="text" id="player-name" placeholder="닉네임 입력"><br><br> 
+  <label for="difficulty">난이도: </label> 
+  <select id="difficulty"> 
+    <option value="easy">쉬움</option> 
+    <option value="normal" selected>보통</option> 
+    <option value="hard">어려움</option> 
+  </select><br><br> 
+  <button id="start-button">게임 시작</button> 
+  <button onclick="toggleHelp()">도움말</button> 
+  <div id="help"> 
+    👻 유령을 피해 점을 먹고 높은 점수를 획득하세요!<br> 
+    벽에 부딪히지 않도록 조심하세요. 
+  </div> 
+  <!-- 게임 화면 --> 
+  <div id="pacman-game"> 
+    <canvas id="game-canvas" width="1000" height="800"></canvas> 
+    <div id="score">
+      <strong>점수:</strong> <span id="score-value">0</span> 
+    </div> 
+  </div>
+  <button id="twitter" type="button" onclick="snsShare('twitter')">트위터로 공유</button>
+  <button id="facebook" type="button" onclick="snsShare('facebook')">페이스북으로 공유</button>
+  <button id="kakaotalk" type="button" onclick="snsShare('kakaotalk')">카카오톡으로 공유</button>
+  <button id="saveImage" type="button">이미지로 저장</button>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <footer> 
+  명지전문대팩맨_프로젝트 
+  </footer>
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js" 
+  integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6" 
+  crossorigin="anonymous"></script>
+  <script src="추가기능.js"></script>
+</body> 
+</html>
