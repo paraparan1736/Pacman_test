@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>팩맨 게임</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Press Start 2P", system-ui;
+      background-color: black;
+      color: white;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .game-space {
+      flex: 0.7;
+      max-width: 60%;
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      border-right: 0px solid white;
+      padding: 10px;
+    }
+
+    #pacman-game {
+      position: relative;
+      width: 560px;
+      height: 640px;
+      background-image: url("Image/Map(1).png");
+      background-size: 100% 100%;
+      margin-top: 10px;
+      border: 5px solid yellow;
+    }
+
+    .cookie {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: white;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .power-cookie {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: white;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 0.5s infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes pulse {
+      from { transform: translate(-50%, -50%) scale(1); }
+      to { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    #PACMAN, #RED, #PINK, #BLUE, #YELLOW {
+      position: absolute;
+      width: 6.24%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    @font-face {
+      font-family: 'GmarketSansBold';
+      src: url('Fonts/GmarketSansBold.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'GmarketSansMedium';
+      src: url('Fonts/GmarketSansMedium.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .game-area {
+      position: relative;
+      width: 560px;
+      height: 640px;
+      background-color: #000;
+      border-radius: 00px;
+      overflow: hidden;
+    }
+
+    .info-space {
+      width: 700px;
+      background-color: rgb(246, 240, 233);
+      padding: 5px 5px 0 5px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      color: black;
+      text-align: center;
+      font-size: 1.2em;
+      font-family: 'GmarketSansMedium', sans-serif;
+      margin-left: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .info-box {
+      padding: 3px;
+      text-align: center;
+      background-color: transparent;
+      margin-bottom: 0;
+    }
+    .info-box h3 {
+      color: black;
+      margin-bottom: 2px;
+      text-align: center;
+      font-size: 1.5em;
+      font-family: 'GmarketSansBold', sans-serif;
+    }
+    .info-box p {
+      color: black;
+      margin: 1px 0;
+      text-align: center;
+      font-size: 1.2em;
+      font-family: 'GmarketSansMedium', sans-serif;
+    }
+    .press-start-2p-regular {
+      font-family: "Press Start 2P", system-ui;
+      font-weight: 400;
+      font-style: normal;
+    }
+    h1, h2, h3, p, label, button, input, select {
+      font-family: "Press Start 2P", system-ui;
+      font-size: 12px; 
+    }
+    #game-over {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border: 2px solid yellow;
+      text-align: center;
+      z-index: 100;
+    }
+    .game-over h2 {
+      color: red;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    .game-over p {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .game-over button {
+      background-color: yellow;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .game-over button:hover {
+      background-color: #ffeb3b;
+    }
+
+    .team-member {
+      display: inline-block;
+      text-align: left;
+      margin: 1px auto;
+      width: 100%;
+      max-width: 600px;
+      font-family: 'GmarketSansMedium', sans-serif;
+    }
+
+    .team-member .name {
+      display: inline-block;
+      width: 100px;
+      text-align: right;
+      margin-right: 10px;
+      font-weight: bold;
+      font-family: 'GmarketSansBold', sans-serif;
+    }
+
+    .team-member .role {
+      display: inline-block;
+      text-align: left;
+      font-family: 'GmarketSansMedium', sans-serif;
+    }
+
+    /* 팀원 소개 전용 스타일 */
+    .team-info .team-member {
+      text-align: left;
+      max-width: 400px;
+      margin-left: 85px;
+      margin-right: auto;
+    }
+
+    .team-info .team-member .name {
+      text-align: right;
+      width: 80px;
+    }
+
+    .team-info .team-member .role {
+      text-align: left;
+    }
+
+    .game-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: #000;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .share-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin: 20px 0;
+      padding: 10px;
+    }
+    
+    .share-button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 45px;
+      height: 45px;
+      background-size: 70%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .share-button:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #twitter {
+      background-image: url('Image/twitter_logo.jpg');
+      background-color: #000000;
+      background-size: 60%;
+    }
+
+    #facebook {
+      background-image: url('Image/facebook_logo.png');
+      background-color: #4267B2;
+      background-size: 160%;
+    }
+
+    #naver {
+      background-image: url('Image/naver_logo.PNG');
+      background-color: #03C75A;
+      background-size: 90%;
+    }
+
+    #copy {
+      background-image: url('Image/copy_logo.png');
+      background-color: #FFFFFF;
+      background-size: 60%;
+    }
+
+    #capture_button {
+      background-image: url('Image/screenshot_logo2.png');
+      background-color: #000000;
+      background-size: 90%;
+      width: 65px;
+      height: 45px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+   <div class="container">
+    <!-- 게임 공간 -->
+    <div class="game-space">
+      <h2 style="font-size: 48px;">PacMan</h2>
+
+      <div id="status-bar" style="color: yellow; margin-bottom: 10px; font-size: 14px; display: flex; gap: 20px; align-items: center;">
+        <div>Score: <span id="score-value">0</span></div>
+        <div>Life: <span id="lives-value">3</span></div>
+        <div>Stage: <span id="stage-value">1</span></div>
+      </div>
+      <div id="pacman-game">
+        <img id="PACMAN" src="Image/PacMan.PNG">
+        <img id="RED" src="Image/Red.PNG">
+        <img id="PINK" src="Image/Pink.PNG">
+        <img id="BLUE" src="Image/Blue.PNG">
+        <img id="YELLOW" src="Image/Orange.PNG">
+        <div id="game-over" class="game-over">
+          <h2>게임 오버</h2>
+          <p>최종 점수: <span id="final-score">0</span></p>
+          <div class="share-buttons">
+            <button id="twitter" class="share-button"></button>
+            <button id="facebook" class="share-button"></button>
+            <button id="naver" class="share-button"></button>
+            <button id="copy" class="share-button"></button>
+            <button id="capture_button" class="share-button"></button>
+          </div>
+          <button onclick="restartGame()">다시 시작</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 보조 공간 -->
+    <div class="info-space">
+      <img src="Image/raw.png" alt="PacMan Logo" class="game-logo" style="width: 60%; display: block; margin: 0 auto;">
+      <div class="info-box">
+        <h3>개요</h3>
+        <p>고전 게임 "팩맨" 및 기능을 웹게임으로 구현한다.</p>
+      </div>
+      <div class="info-box">
+        <h3>구현된 기능</h3>
+        <div class="team-member">
+          <span class="name">팩맨</span>
+          <span class="role">– 조작, 이동, 쿠키 상호작용, 유령 충돌</span>
+        </div>
+        <div class="team-member">
+          <span class="name">유령</span>
+          <span class="role">– 이동, 모드 구현 (생성-추적-산개-죽음-공포)</span>
+        </div>
+        <div class="team-member">
+          <span class="name">쿠키</span>
+          <span class="role">– 일반 및 파워 쿠키 생성, 초기화</span>
+        </div>
+        <div class="team-member">
+          <span class="name">게임</span>
+          <span class="role">– 게임 진행 및 초기화, 5개의 스테이지, 점수 시스템</span>
+        </div>
+        <div class="team-member">
+          <span class="name">기타</span>
+          <span class="role">– 게임 점수 및 공유 기능</span>
+        </div>
+      </div>
+      <div class="info-box team-info">
+        <h3>팀원 소개</h3>
+        <div class="team-member">
+          <span class="name">안재겸</span>
+          <span class="role">– 프로젝트 담당</span>
+        </div>
+        <div class="team-member">
+          <span class="name">최다온</span>
+          <span class="role">– JS 담당</span>
+        </div>
+        <div class="team-member">
+          <span class="name">전민우</span>
+          <span class="role">– JS 담당</span>
+        </div>
+        <div class="team-member">
+          <span class="name">성명규</span>
+          <span class="role">– HTML 담당</span>
+        </div>
+        <div class="team-member">
+          <span class="name">이도경</span>
+          <span class="role">– CSS 담당</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script>
+    function showGameOver(score) {
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('game-over').style.display = 'block';
+    }
+
+    document.getElementById('twitter').addEventListener('click', () => {
+      snsShare('twitter');
+    });
+    
+    document.getElementById('facebook').addEventListener('click', () => {
+      snsShare('facebook');
+    });
+    
+    document.getElementById('naver').addEventListener('click', () => {
+      snsShare('naver');
+    });
+    
+    document.getElementById('copy').addEventListener('click', () => {
+      snsShare('copy');
+    });
+
+    function snsShare(sns) {
+      const maxScore = document.getElementById('final-score').textContent;
+<<<<<<< HEAD
+      const text = `내 점수는 ${maxScore}점이에요!\nhttps://paraparan1736.github.io/Pacman_test/pacman.html << 팩맨 게임하러가기\n#Pacman`;
+      const url = "https://paraparan1736.github.io/Pacman_test/pacman.html";
+=======
+      const text = `내 점수는 ${maxScore}점이에요!\nhttps://paraparan1736.github.io/Pacman_test/index.html << 팩맨 게임하러가기\n#Pacman`;
+      const url = "https://paraparan1736.github.io/Pacman_test/index.html";
+>>>>>>> 1ff052ae0133044d14f0a02220b83d1a1a2ae2d5
+      
+      switch(sns){
+        case 'twitter':
+          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+          break;
+
+        case 'facebook':
+          window.open(`http://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+          break;
+
+        case 'naver':
+          window.open(`https://share.naver.com/web/shareView?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`, '_blank');
+          break;
+
+        case 'copy':
+          navigator.clipboard.writeText(url).then(() => {
+            alert('링크가 복사되었습니다!');
+          });
+          break;
+      }
+    }
+
+    document.getElementById('capture_button').addEventListener('click', function screenshot() {
+      html2canvas(document.querySelector(".game-space")).then(canvas => {
+        save(canvas);
+      });
+    });
+
+    function save(canvas) {
+      const imageData = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      link.href = imageData;
+      link.download = 'Pacman.png';
+      link.click();
+    }
+
+    function gameOver() {
+      isGameOver = true;
+      showGameOver(score);
+    }
+
+    function checkWin() {
+      if (dots.length === 0) {
+        isGameOver = true;
+        showGameOver(score);
+      }
+    }
+  </script>
+  <script src="basic.js"></script>
+  <script src="level.js"></script>
+  <script src="object.js"></script>
+  <script src="system.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
